@@ -11,9 +11,11 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
 public class emailStepDefs {
@@ -41,12 +43,15 @@ public void setup() {
 	driver.findElement(By.id("passwordNext")).click();
 }
 	
-/*@After
+@After
 public void returnState() {
-	
-	
-	
-}*/
+	//Have the system click the gmail button, returning you to your inbox
+	WebDriverWait wait = new WebDriverWait(driver, 10);
+	wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"gb\"]/div[2]/div[1]/div[4]/div/a/img")));
+	driver.findElement(By.xpath("//*[@id=\\\"gb\\\"]/div[2]/div[1]/div[4]/div/a/img")).click();
+	//And now quit the driver
+	driver.quit();
+}
 	
 	
 	@Given("^the user is logged into Gmail$")
@@ -59,8 +64,11 @@ public void returnState() {
 	@And("^that the user selects the compose button$")	
 	public void that_the_user_selects_the_compose_buton() {	
 		WebDriverWait wait = new WebDriverWait(driver, 10);
-		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\":41\"]/div/div")));
-		driver.findElement(By.xpath("//*[@id=\":41\"]/div/div")).click();
+		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html[1]/body[1]/div[7]/div[3]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]")));
+		driver.findElement(By.xpath("/html[1]/body[1]/div[7]/div[3]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]")).click();
+		//USE THIS PATH, works way better! /html[1]/body[1]/div[7]/div[3]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]
+		//*[@id=":4y"]/div/div
+		//*[@id=\":41\"]/div/div
 	}
 	
 	@When("^the user adds the \"([^\"]*)\" of the recipient$")
@@ -79,14 +87,32 @@ public void returnState() {
 	public void attaches_an_image_to_the_email(String imagePath) {
 		WebElement tempPic = driver.findElement(By.name("Filedata"));
 		tempPic.sendKeys("C:\\Users\\Robert\\Pictures\\Camera Roll\\" + imagePath);
-		
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		//wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\":dd\"]")));
+		driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+	}
+	
+	@And("^the user hits the send button$")
+	public void the_user_hits_the_send_button() {
+		//Click the send button
+		//Still doesn't work....don't know why....!!!!
+		driver.findElement(By.name("Send")).click();
+	}
+	
+	
+	@Then("^the email with the image will be succesfully sent to the correct recipient$")
+	public void the_email_with_the_image_will_be_successfully_sent_to_the_correct_recipient() {
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.presenceOfElementLocated(By.className("aT")));
+		WebElement tempEl = driver.findElement(By.className("aT"));
+		if(tempEl.getText().contains("Message sent")) {
+			System.out.println("Email Sent Successfully!");
+		}else {
+			System.out.println("Email not sent");
+		}
 		
 	}
 	
-	/*
-	WebElement tempPic = driver.findElement(By.name("Filedata"));
-	tempPic.sendKeys("C:\\Users\\Robert\\Pictures\\Camera Roll\\sendtoJack.PNG");
-	*/
 	
 /*
 		driver.get("https://accounts.google.com");
