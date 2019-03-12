@@ -13,13 +13,13 @@ Feature: Image attachments in an Email
     And the user hits the send button
     Then the email with the image will be succesfully sent to the correct recipients
     
-   	#Examples:
-    #	| email 							| imagefile |
-    #	| none@yahoo.ca				| img1.jpg 	|
-    #	| bobby@gmail.com 		| img2.jpg 	|
-    #	|	steve@gmail.com 		| img3.jpg 	|
-    #	| chris@gmail.com 		| img4.jpg 	|
-    #	| nathan@gmail.com 		| img5.jpg 	|
+   	Examples:
+    | email 							| imagefile |
+    | none@yahoo.ca				| img1.jpg 	|
+    | bobby@gmail.com 		| img2.jpg 	|
+    |	steve@gmail.com 		| img3.jpg 	|
+    | chris@gmail.com 		| img4.jpg 	|
+    | nathan@gmail.com 		| img5.jpg 	|
     
     
 # Alternate Flow
@@ -33,13 +33,13 @@ Feature: Image attachments in an Email
     And the user hits the send button
     Then the email with the image will be succesfully sent to the correct recipients
     
-    #Examples:
-    	#| emails 															| imagefile |
-    	#| none@yahoo.ca, noemail@gmail.com 		| img1.jpg 	|
-    	#| bobby@gmail.com, bobby1@gmail.com 		| img2.jpg 	|
-    	#| steve@gmail.com, steve1@gmail.com 		| img3.jpg 	|
-    	#| chris@gmail.com, chris1@gmail.com 		| img4.jpg 	|
-    	#| nathan@gmail.com, nathan1@gmail.com 	| img5.jpg 	|
+    Examples:
+    	| emails 															| imagefile |
+    	| none@yahoo.ca, noemail@gmail.com 		| img1.jpg 	|
+    	| bobby@gmail.com, bobby1@gmail.com 		| img2.jpg 	|
+    	| steve@gmail.com, steve1@gmail.com 		| img3.jpg 	|
+    	| chris@gmail.com, chris1@gmail.com 		| img4.jpg 	|
+    	| nathan@gmail.com, nathan1@gmail.com 	| img5.jpg 	|
     
     
 # Error Flow

@@ -49,9 +49,9 @@ public void setup() {
 @After
 public void returnState() {
 	//Have the system click the gmail button, returning you to your inbox
-	WebDriverWait wait = new WebDriverWait(driver, 10);
-	wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"gb\"]/div[2]/div[1]/div[4]/div/a/img")));
-	driver.findElement(By.xpath("//*[@id=\\\"gb\\\"]/div[2]/div[1]/div[4]/div/a/img")).click();
+	//WebDriverWait wait = new WebDriverWait(driver, 10);
+	//wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\"gb\"]/div[2]/div[1]/div[4]/div/a/img")));
+	//driver.findElement(By.xpath("//*[@id=\\\"gb\\\"]/div[2]/div[1]/div[4]/div/a/img")).click();
 	//And now quit the driver
 	driver.quit();
 }
@@ -110,7 +110,7 @@ public void returnState() {
 		//driver.findElement(By.xpath("/html[1]/body[1]/div[26]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[4]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/div[1]/div[1]/div[4]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]")).click();
 	}
 	
-	@Then("^the email with the image will be succesfully sent to the correct recipient$")
+	@Then("^the email with the image will be succesfully sent to the correct recipients$")
 	public void the_email_with_the_image_will_be_successfully_sent_to_the_correct_recipient() {
 		//Wait for the bottom left corner black label thing to pop-up with info
 		WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -140,7 +140,7 @@ public void returnState() {
 	public void the_user_adds_an_invalid_email_as_the_recipient(String invalidEmail) {
 		//In this case, the email being entered will be invalid. It must be entered the same way nonetheless.
 		WebDriverWait wait = new WebDriverWait(driver, 10);
-		wait.until(ExpectedConditions.elementToBeClickable(By.name("to"));
+		wait.until(ExpectedConditions.elementToBeClickable(By.name("to")));
 		driver.findElement(By.name("to")).sendKeys(invalidEmail + Keys.ENTER);
 	}
 	
