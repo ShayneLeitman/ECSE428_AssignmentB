@@ -32,11 +32,14 @@ public class emailStepDefs {
 	//Opens up to 
 @Before
 public void setup() {
+	//login to google account, in the account homepage (not the gmail homepage!)
 	System.setProperty("webdriver.chrome.driver", "C:\\Users\\Robert\\chromedriver_win32\\chromedriver.exe");
 	driver = new ChromeDriver();
 	driver.get("https://accounts.google.com");
+	//Enter the username and hit next
 	driver.findElement(By.id("identifierId")).sendKeys("ecse428assb@gmail.com");
 	driver.findElement(By.id("identifierNext")).click();
+	//Wait until the password box pops up, then enter password and hit next!
 	WebDriverWait wait = new WebDriverWait(driver, 10);
 	wait.until(ExpectedConditions.visibilityOfElementLocated(By.name("password")));
 	driver.findElement(By.name("password")).sendKeys("testing123!");
@@ -56,6 +59,7 @@ public void returnState() {
 	
 	@Given("^the user is logged into Gmail$")
 	public void the_user_is_creating_an_email() {
+		//Wait until the page is clearly loaded, then go to the gmail homepage (your inbox)
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("gb")));
 		driver.get("https://mail.google.com/mail/#inbox");
@@ -63,6 +67,7 @@ public void returnState() {
 		
 	@And("^that the user selects the compose button$")	
 	public void that_the_user_selects_the_compose_buton() {	
+		//Wait until the compose button is clickable (page fully loaded), and then click the compose button
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("/html[1]/body[1]/div[7]/div[3]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]")));
 		driver.findElement(By.xpath("/html[1]/body[1]/div[7]/div[3]/div[1]/div[2]/div[1]/div[1]/div[1]/div[2]/div[1]/div[1]/div[1]/div[1]/div[1]/div[1]")).click();
@@ -73,6 +78,8 @@ public void returnState() {
 	
 	@When("^the user adds the \"([^\"]*)\" of the recipient$")
 	public void the_user_adds_an_email_recipient(String email) {
+		//Wait until the "to" button is clickable, eaning the empty email has fully loaded.
+		//Then enter the dynamic email of the recipient.
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		wait.until(ExpectedConditions.elementToBeClickable(By.name("to")));
 		driver.findElement(By.name("to")).sendKeys(email + Keys.ENTER);
@@ -88,29 +95,61 @@ public void returnState() {
 		WebElement tempPic = driver.findElement(By.name("Filedata"));
 		tempPic.sendKeys("C:\\Users\\Robert\\Pictures\\Camera Roll\\" + imagePath);
 		WebDriverWait wait = new WebDriverWait(driver, 10);
-		//wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id=\":dd\"]")));
-		driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+		wait.until(ExpectedConditions.elementToBeClickable(By.className("dO")));
 	}
 	
 	@And("^the user hits the send button$")
 	public void the_user_hits_the_send_button() {
 		//Click the send button
 		//Still doesn't work....don't know why....!!!!
-		driver.findElement(By.name("Send")).click();
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.elementToBeClickable(By.className("dO")));
+		//Important note: I tried forever to click the button, but that just wasn't working. So now I just have the code hit control-enter, which in Gmail is a send macro.
+		String keysPressed =  Keys.chord(Keys.CONTROL, Keys.RETURN);
+		driver.findElement(By.name("subjectbox")).sendKeys(keysPressed) ;
+		//driver.findElement(By.xpath("/html[1]/body[1]/div[26]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[1]/div[4]/table[1]/tbody[1]/tr[1]/td[2]/table[1]/tbody[1]/tr[2]/td[1]/div[1]/div[1]/div[4]/table[1]/tbody[1]/tr[1]/td[1]/div[1]/div[2]")).click();
 	}
-	
 	
 	@Then("^the email with the image will be succesfully sent to the correct recipient$")
 	public void the_email_with_the_image_will_be_successfully_sent_to_the_correct_recipient() {
+		//Wait for the bottom left corner black label thing to pop-up with info
 		WebDriverWait wait = new WebDriverWait(driver, 10);
 		wait.until(ExpectedConditions.presenceOfElementLocated(By.className("aT")));
+		//Loop and keep checking if the element says sending, or if it changes!
 		WebElement tempEl = driver.findElement(By.className("aT"));
+		while(tempEl.getText().contains("Sending")) {
+			wait.until(ExpectedConditions.presenceOfElementLocated(By.className("aT")));
+			tempEl = driver.findElement(By.className("aT"));
+		}
 		if(tempEl.getText().contains("Message sent")) {
 			System.out.println("Email Sent Successfully!");
 		}else {
-			System.out.println("Email not sent");
+			System.out.println("Email Sending Fails");
 		}
-		
+	}
+	
+	@When("^the user adds the \"([^\"]*)\" of all recipients$")
+	public void the_user_adds_the_emails_of_all_recipients(String bothEmails) {
+		//In this case, both emails from each test case have been attached to the same string variable
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.elementToBeClickable(By.name("to")));
+		driver.findElement(By.name("to")).sendKeys(bothEmails + Keys.ENTER);
+	}
+	
+	@When("^the user adds an invalid \"([^\"]*)\" as the recipient$")
+	public void the_user_adds_an_invalid_email_as_the_recipient(String invalidEmail) {
+		//In this case, the email being entered will be invalid. It must be entered the same way nonetheless.
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.elementToBeClickable(By.name("to"));
+		driver.findElement(By.name("to")).sendKeys(invalidEmail + Keys.ENTER);
+	}
+	
+	@Then("^the email with the image will not be correctly sent$")
+	public void the_email_with_the_image_will_not_be_correctly_sent() {
+		//Due to inputting an invalid email, a pop-up will warn the user. We will click ok.
+		WebDriverWait wait = new WebDriverWait(driver, 10);
+		wait.until(ExpectedConditions.elementToBeClickable(By.name("ok")));
+		driver.findElement(By.name("ok")).click();
 	}
 	
 	
